@@ -2,14 +2,14 @@ from turtle import Turtle, Screen
 import turtle, winsound, os
 
 def k1():
-    screen.onkey(None, "w")
+    screen.onkey(None, 'w')
     cy = cursor.ycor()
     cym = cy+100
     cursor.goto(-250, cym)
     credits.color('black')
     if cursor.ycor() == 300:
         cursor.goto(-250,200)
-        screen.onkey(k1, "w")
+        screen.onkey(k1, 'w')
     elif cursor.ycor() == 200:
         play.color('white')
         screen.onkey(k1 , 'w')
@@ -18,10 +18,10 @@ def k1():
         setings.color('black')
         screen.onkey(k1 , 'w')
     else:
-        screen.onkey(k1, "w")
+        screen.onkey(k1, 'w')
     
 def k2():
-    screen.onkey(None, "s")
+    screen.onkey(None, 's')
     cy = cursor.ycor()
     cym = cy-100
     cursor.goto(-250, cym)
@@ -37,20 +37,19 @@ def k2():
         credits.color('black')
         screen.onkey(k2 , 's')
     else:
-        screen.onkey(k2, "s")
+        screen.onkey(k2, 's')
 
 def k3():
     screen.onkey(None, 'return')
     if cursor.ycor() == 200:
-        os.startfile('levels\dunegon1.py')
+        os.startfile('char select.py')
+        os._exit(0)
     elif cursor.ycor() == 100:
         os.startfile('credits.txt')
     elif cursor.ycor() == 0:
         os.startfile('settings.txt')
     elif cursor.ycor() == -100:
         file = input('Put file path in here')
-
-#search_str(r'config.txt', 'hellomisslaw')
 
 winsound.PlaySound('assets\main menu.wav', winsound.SND_ASYNC)
 

@@ -1,0 +1,2 @@
+Code for the collisions - first answer on this stackoverflow post https://stackoverflow.com/questions/57071985/how-do-i-make-colour-detection-in-turtle/57081463#57081463
+Warrior art = https://www.google.com/url?sa=i&url=https%3A%2F%2Fopengameart.org%2Fcontent%2Fanimated-warrior&psig=AOvVaw3yhp3G_pNYL3_1o0yISCFO&ust=1697218051901000&source=images&cd=vfe&opi=89978449&ved=0CA8QjhxqFwoTCIC2tIuE8YEDFQAAAAAdAAAAABAD
