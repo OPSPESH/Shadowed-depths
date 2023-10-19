@@ -1,1 +1,0 @@
-Code for the collisions - first answer on this stackoverflow post https://stackoverflow.com/questions/57071985/how-do-i-make-colour-detection-in-turtle/57081463#57081463
