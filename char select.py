@@ -1,78 +1,70 @@
 from turtle import Turtle, Screen
-import turtle, time
+import turtle, winsound, os  
+
+a = 0
+characters = [
+    'assets/charicters/hunter.gif',
+    'assets/charicters/criminal.gif',
+    'assets/charicters/priest.gif',
+    'assets/charicters/warrior.gif',
+    'assets/charicters/wizard.gif'
+]
 
 def k1():
-    a = b
-    screen.onkey(None, 'd')
-    print(b)
-    if a == 1:
-       charicter.shape('assets\charicters\hunter.gif')
-       screen.onkey(k1, 'd')
-       b = 2
-    elif a == 2:
-       charicter.shape('assets\charicters\criminal.gif')
-       screen.onkey(k1, 'd')
-       b = 3
-    elif a == 3:
-        charicter.shape('assets\charicters\priest.gif')
-        screen.onkey(k1, 'd')
-        b = 4
-    elif a == 4:
-        charicter.shape('assets\charicters\warrior.gif')
-        screen.onkey(k1, 'd')
-        b = 5
-    elif a == 5:
-        charicter.shape('assets\charicters\wizard.gif')
-        screen.onkey(k1, 'd')
+    global a
+    a = (a - 1) % len(characters)
+    charicter.shape(characters[a])
 
-#def k2(a):
- #   screen.onkey(None, 'a')
-  #  a = a - 1
-   # if a == 2:
-    #   charicter.shape('assets\charicters\criminal.gif')
-     #  screen.onkey(k2(a), 'a')
-    #elif a == 3:
-     #   charicter.shape('assets\charicters\priest.gif')
-      #  screen.onkey(k2(a), 'a')
-    #elif a == 4:
-     #   charicter.shape('assets\charicters\warrior.gif')
-      #  screen.onkey(k2(a), 'a')
-    #elif a == 5:
-     #   charicter.shape('assets\charicters\wizard.gif')
-      #  screen.onkey(k2(a), 'a')
+def k2():
+    global a
+    a = (a + 1) % len(characters)
+    charicter.shape(characters[a])
 
-#the charicters
-turtle.register_shape('assets\charicters\hunter.gif')
-turtle.register_shape('assets\charicters\criminal.gif')
-turtle.register_shape('assets\charicters\priest.gif')
-turtle.register_shape('assets\charicters\warrior.gif')
-turtle.register_shape('assets\charicters\wizard.gif')
+def k3():
+    global a
+    a =  repr(a)
+    f = open('charicter.txt', 'w')
+    f.write('charicter = ' + a)
+    f.close()
+    os.startfile('levels\dunegon1.py')
+    os._exit(0)
+
+for character in characters:
+    turtle.register_shape(character)
 
 charicter = turtle.Turtle()
-#charicter.shape('assets\charicters\hunter.gif')
+charicter.shape(characters[a])
 
 text = turtle.Turtle()
 text.hideturtle()
 text.penup()
-text.goto(-100, 300)
-text.write('Enter to select a charicter', font=('arial', '18'))
+text.goto(-100, 350)
+text.write('Enter to select a character', font=('arial', '18'))
  
 text1 = turtle.Turtle()
 text1.hideturtle()
 text1.penup()
-text1.goto(-100, 250)
-text1.write('A, S, D, F, G To cycle through the charicters', font=('arial', '18'))
+text1.goto(-100, 300)
+text1.write('A, D To cycle through the characters', font=('arial', '18'))
+
+text2 = turtle.Turtle()
+text2.hideturtle()
+text2.penup()
+text2.goto(-100, 250)
+text2.write('Enter to select a character', font=('arial', '18'))
+
+winsound.PlaySound('assets\main menu.wav', winsound.SND_ASYNC)
 
 screen = Screen()
-screen.setup(800,800)
+screen.setup(800, 800)
 screen.title('Rendering')
 screen.tracer(False)
 
-b = 1
-
-screen.onkey(k1, 'd')
+screen.onkey(k1, 'a')
+screen.onkey(k2, 'd')
+screen.onkey(k3, 'Return')
 
 screen.listen()
 screen.tracer(True)
-screen.title('Select a charicter')
+screen.title('Select a character')
 screen.mainloop()
