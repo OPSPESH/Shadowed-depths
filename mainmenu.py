@@ -42,7 +42,7 @@ def k2():
 def k3():
     screen.onkey(None, 'return')
     if cursor.ycor() == 200:
-        os.startfile('char select.py')
+        os.startfile('charicterselect.py')
         os._exit(0)
     elif cursor.ycor() == 100:
         os.startfile('credits.txt')
@@ -104,7 +104,7 @@ cursor.goto(-250, 200)
 cursor.showturtle()
 
 play.goto(-200, 200)
-play.write('     Enter dunegon', font=('arial', '40'))
+play.write('     Select charicter', font=('arial', '40'))
 play.color('white')
 play.showturtle()
 
