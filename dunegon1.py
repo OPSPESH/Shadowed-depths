@@ -1,152 +1,273 @@
-from turtle import Screen, Turtle
-import turtle, winsound
+import turtle, random
 
 CURSOR_SIZE = 20
 walls = []
+room = 1
+lockeddoor = 0
 
-charicters = [
-    'assets/smallcharicters/hunter.gif',
-    'assets/smallcharicters/criminal.gif',
-    'assets/smallcharicters/priest.gif',
-    'assets/smallcharicters/warrior.gif',
-    'assets/smallcharicters/wizard.gif'
-]
+turtle.register_shape('assets\key.gif')
 
-# making the walls script   
-def makewall(turtle, distance):
-    turtle.forward(distance / 2)
-    clone = turtle.clone()
-    clone.shapesize(stretch_len=distance/CURSOR_SIZE)
-    clone.showturtle()
-    turtle.forward(distance / 2)
+mapper = turtle.Turtle()
+mapper.shape('square')
+mapper.hideturtle()
+mapper.speed(0)
+mapper.pensize(4)
+mapper.penup()
 
-    walls.append(clone)
+enemy = turtle.Turtle()
+enemy.color('red')
+enemy.shape('circle')
+enemy.penup()
+enemy.speed(1)
+enemy.hideturtle()
 
-# collision mechanics
-def collision(turtle):
-    tx, ty = turtle.position()
+player = turtle.Turtle()
+player.fillcolor('blue')
+player.shapesize(1.75, 1.75, 1.75)
+player.penup() 
 
-    for wall in walls:
+key = turtle.Turtle()
+key.hideturtle()
+key.shape('assets\key.gif')
+key.penup()
 
-        if wall.distance(turtle) < CURSOR_SIZE / 2:
-            screen.title("Press enter to respawn")
-            return True
+keymapper = turtle.Turtle()
+keymapper.color('gold')
+keymapper.shape('square')
+keymapper.hideturtle()
+keymapper.speed(0)
+keymapper.pensize(4)
+keymapper.penup()
 
-        wx, wy = wall.position()
-        heading = wall.heading()
-        _, stretch_len, _ = wall.shapesize()
-        half_length = stretch_len * (CURSOR_SIZE + 1) / 2
+def enemy(turtle):
+    nextpos = [
+        (turtle.xcor() + 25, turtle.ycor()),
+        (turtle.xcor() - 25, turtle.ycor()),
+        (turtle.xcor(), turtle.ycor() + 25),
+        (turtle.xcor(), turtle.ycor() - 25)
+    ]
+    rnextpos = random.randint(0,3)
+    turtle.goto(nextpos[rnextpos])
+    if turtle.xcor() == 375:
+        turtle.goto(turtle.xcor() - 25, turtle.ycor())
+    elif turtle.xcor() == -375:
+        turtle.goto(turtle.xcor() + 25, turtle.ycor())
+    elif turtle.ycor() == 375:
+        turtle.goto(turtle.xcor(), turtle.ycor() - 25)
+    elif turtle.ycor() == -375:
+        turtle.goto(turtle.xcor(), turtle.ycor() + 25)
 
-        if heading in [0, 180]:  # horizontal wall
-
-            if abs(ty - wy) < CURSOR_SIZE / 2 and abs(tx - wx) < half_length:
-                return True
-
-        elif heading in [90, 270]:  # vertical wall
-
-            if abs(tx - wx) < CURSOR_SIZE / 2 and abs(ty - wy) < half_length:
-                return True
-
-    return False
-
-
-#movement
-def k4():
-    screen.onkey(None, 's')
-    player.setheading(270)
-    player.forward(15)
-    if collision(player):
-        screen.title('Collision!')
-        screen.title('Press enter to respawn')
-    else:
-        screen.onkey(k4, 's')
-        
-def k3(): 
-    screen.onkey(None, 'd')
-    player.setheading(0)
-    player.forward(15)
-    if collision(player):
-        screen.title('Collision!')
-        screen.title('Press enter to respawn')
-    else:
-        screen.onkey(k3, 'd')
-def k2():
-    screen.onkey(None, 'a')
-    player.setheading(180)
-    player.forward(15)
-    if collision(player):
-        screen.title('Collision!')
-        screen.title('Press enter to respawn')
-    else:
-        screen.onkey(k2, 'a')
-        
 def k1():
-    screen.onkey(None, 'w')
-    player.setheading(90)
-    player.forward(15)
-    if collision(player):
-        screen.title('Collision!')
-        screen.title('Press enter to respawn')
-    else:
-        screen.onkey(k1, 'w')
+    if player.heading() == 0:
+        player.goto(player.xcor() + 25, player.ycor())
+    elif player.heading() == 180:
+        player.goto(player.xcor() - 25, player.ycor())
+    elif player.heading() == 90:
+        player.goto(player.xcor(), player.ycor() + 25)
+    elif player.heading() == 270:
+        player.goto(player.xcor(), player.ycor() - 25)
+    doorcollision(player)
+    collision(player)
 
-for charicter in charicters:
-    turtle.register_shape(charicter)
+def k2():
+    player.right(90)
     
-# screen size
-screen = Screen() 
+def k3():
+    player.left(90)
+
+def doorcollision(turtle):
+    global room, lockeddoor
+    if room == 1:
+        if turtle.ycor() == 375:
+            if turtle.xcor() == -100 or turtle.xcor() == -75 or turtle.xcor() == -50 or turtle.xcor() == -25 or turtle.xcor() == 0 or turtle.xcor() == 25 or turtle.xcor() == 50 or turtle.xcor() == 75 or turtle.xcor() == 100:
+                mapper.clear()
+                turtle.goto(0,-350)
+                turtle.setheading(90)
+                room2()
+                room = 2
+                
+    elif room == 2:
+        if turtle.ycor() == 375:
+            if turtle.xcor() == -100 or turtle.xcor() == -75 or turtle.xcor() == -50 or turtle.xcor() == -25 or turtle.xcor() == 0 or turtle.xcor() == 25 or turtle.xcor() == 50 or turtle.xcor() == 75 or turtle.xcor() == 100:
+                mapper.clear()
+                turtle.goto(0,-350)
+                turtle.setheading(90)
+                room3()
+                room = 3        
+        if turtle.ycor() == -375:
+            if turtle.xcor() == -100 or turtle.xcor() == -75 or turtle.xcor() == -50 or turtle.xcor() == -25 or turtle.xcor() == 0 or turtle.xcor() == 25 or turtle.xcor() == 50 or turtle.xcor() == 75 or turtle.xcor() == 100:
+                mapper.clear()
+                turtle.goto(0,350)
+                turtle.setheading(270)
+                room1()
+                room = 1
+    elif room == 3:
+        if lockeddoor == 1:
+            pass
+        elif lockeddoor == 0:
+            if turtle.ycor() == 375:
+                if turtle.xcor() == -100 or turtle.xcor() == -75 or turtle.xcor() == -50 or turtle.xcor() == -25 or turtle.xcor() == 0 or turtle.xcor() == 25 or turtle.xcor() == 50 or turtle.xcor() == 75 or turtle.xcor() == 100:
+                    mapper.clear()
+                    keymapper.clear()
+                    turtle.goto(0, -350)
+                    turtle.setheading(90)
+                    room4()
+                    room = 4
+    elif room == 3:
+        if turtle.ycor() == -375:
+            if turtle.xcor() == -100 or turtle.xcor() == -75 or turtle.xcor() == -50 or turtle.xcor() == -25 or turtle.xcor() == 0 or turtle.xcor() == 25 or turtle.xcor() == 50 or turtle.xcor() == 75 or turtle.xcor() == 100:
+                mapper.clear()
+                keymapper.clear
+                turtle.goto(0,350)
+                turtle.setheading(270)
+                room2()
+                room = 2
+                
+def collision(turtle):
+    global lockeddoor
+    if room == 1 or room == 2:
+        if turtle.xcor() == 375:
+            turtle.goto(turtle.xcor() - 25, turtle.ycor())
+        elif turtle.ycor() == 375:
+            turtle.goto(turtle.xcor(), turtle.ycor() - 25)
+        elif turtle.xcor() == -375:
+            turtle.goto(turtle.xcor() + 25, turtle.ycor())
+        elif turtle.ycor() == -375:
+            turtle.goto(turtle.xcor(), turtle.ycor() + 25)
+    elif room == 3:
+        if turtle.xcor() == 250 and turtle.ycor() == 0:
+            print('collected the key')
+            key.hideturtle()
+            keymapper.pendown()
+            keymapper.setheading(180)
+            keymapper.color('saddle brown')
+            keymapper.forward(200)
+            lockeddoor = 0
+        elif turtle.xcor() == 375:
+            turtle.goto(turtle.xcor() - 25, turtle.ycor())
+        elif turtle.ycor() == 375:
+            turtle.goto(turtle.xcor(), turtle.ycor() - 25)
+        elif turtle.xcor() == -375:
+            turtle.goto(turtle.xcor() + 25, turtle.ycor())
+        elif turtle.ycor() == -375:
+            turtle.goto(turtle.xcor(), turtle.ycor() + 25)
+        elif turtle.xcor() == 100:
+            if turtle.ycor() == 100 or turtle.ycor() == 125 or turtle.ycor() == 150 or turtle.ycor() == 175 or turtle.ycor() == 200 or turtle.ycor() == 225 or turtle.ycor() == 250 or turtle.ycor() == 275 or turtle.ycor() == 300 or turtle.ycor() == 325 or turtle.ycor() == 350 or turtle.ycor() == 375 or turtle.ycor() == -100 or turtle.ycor() == -125 or turtle.ycor() == -150 or turtle.ycor() == -175 or turtle.ycor() == -200 or turtle.ycor() == -225 or turtle.ycor() == -250 or turtle.ycor() == -275 or turtle.ycor() == -300 or turtle.ycor() == -325 or turtle.ycor() == -350 or turtle.ycor() == -375:
+                turtle.goto(turtle.xcor() - 25, turtle.ycor())
+        elif turtle.xcor() == -100:
+            if turtle.ycor() == 100 or turtle.ycor() == 125 or turtle.ycor() == 150 or turtle.ycor() == 175 or turtle.ycor() == 200 or turtle.ycor() == 225 or turtle.ycor() == 250 or turtle.ycor() == 275 or turtle.ycor() == 300 or turtle.ycor() == 325 or turtle.ycor() == 350 or turtle.ycor() == 375 or turtle.ycor() == -100 or turtle.ycor() == -125 or turtle.ycor() == -150 or turtle.ycor() == -175 or turtle.ycor() == -200 or turtle.ycor() == -225 or turtle.ycor() == -250 or turtle.ycor() == -275 or turtle.ycor() == -300 or turtle.ycor() == -325 or turtle.ycor() == -350 or turtle.ycor() == -375:
+                turtle.goto(turtle.xcor() + 25, turtle.ycor())
+        elif turtle.ycor() == 100:
+            if turtle.xcor() == 100 or turtle.xcor() == 125 or turtle.xcor() == 150 or turtle.xcor() == 175 or turtle.xcor() == 200 or turtle.xcor() == 225 or turtle.xcor() == 250 or turtle.xcor() == 275 or turtle.xcor() == 300 or turtle.xcor() == 325 or turtle.xcor() == 350 or turtle.xcor() == 375 or turtle.xcor() == -100 or turtle.xcor() == -125 or turtle.xcor() == -150 or turtle.xcor() == -175 or turtle.xcor() == -200 or turtle.xcor() == -225 or turtle.xcor() == -250 or turtle.xcor() == -275 or turtle.xcor() == -300 or turtle.xcor() == -325 or turtle.xcor() == -350 or turtle.xcor() == -375:
+                turtle.goto(turtle.xcor(), turtle.ycor() - 25)
+        elif turtle.ycor() == -100:
+            if turtle.xcor() == 100 or turtle.xcor() == 125 or turtle.xcor() == 150 or turtle.xcor() == 175 or turtle.xcor() == 200 or turtle.xcor() == 225 or turtle.xcor() == 250 or turtle.xcor() == 275 or turtle.xcor() == 300 or turtle.xcor() == 325 or turtle.xcor() == 350 or turtle.xcor() == 375 or turtle.xcor() == -100 or turtle.xcor() == -125 or turtle.xcor() == -150 or turtle.xcor() == -175 or turtle.xcor() == -200 or turtle.xcor() == -225 or turtle.xcor() == -250 or turtle.xcor() == -275 or turtle.xcor() == -300 or turtle.xcor() == -325 or turtle.xcor() == -350 or turtle.xcor() == -375:
+                turtle.goto(turtle.xcor(), turtle.ycor() + 25)
+
+            
+def makewall(distance):
+    mapper.pendown()
+    mapper.color('black')
+    mapper.forward(distance)
+    mapper.penup()
+
+def makedoor(distance):
+    mapper.pendown()
+    mapper.color('saddle brown')
+    mapper.forward(distance)
+    mapper.penup()
+
+def makelockeddoor(distance):
+    global lockeddoor
+    mapper.goto(mapper.xcor(), mapper.ycor())
+    mapper.color('gold')
+    mapper.pendown()
+    mapper.forward(distance)
+    mapper.penup()
+    lockeddoor = 1
+    
+def room1():
+    mapper.forward(375)
+    mapper.left(90)
+    makewall(375)
+    mapper.left(90)
+    makewall(275)
+    makedoor(200)
+    makewall(275)
+    mapper.left(90)
+    makewall(750)
+    mapper.left(90)
+    makewall(750)
+    mapper.left(90)
+    makewall(375)
+    mapper.goto(0,0)
+    mapper.setheading(0)
+
+def room2():
+    mapper.forward(375)
+    mapper.left(90)
+    makewall(375)
+    mapper.left(90)
+    makewall(275)
+    makedoor(200)
+    makewall(275)
+    mapper.left(90)
+    makewall(750)
+    mapper.left(90)
+    makewall(275)
+    makedoor(200)
+    makewall(275)
+    mapper.left(90)
+    makewall(375)
+    mapper.goto(0,0)
+    mapper.setheading(0)
+
+def room3():
+    mapper.forward(375)
+    mapper.left(90)
+    mapper.forward(100)
+    mapper.left(180)
+    makewall(200)
+    mapper.right(90)
+    makewall(275)
+    mapper.left(90)
+    makewall(275)
+    mapper.right(90)
+    makedoor(200)
+    mapper.right(90)
+    makewall(275)
+    mapper.left(90)
+    makewall(275)
+    mapper.right(90)
+    makewall(200)
+    mapper.right(90)
+    makewall(275)
+    mapper.left(90)
+    makewall(275)
+    mapper.right(90)
+    makelockeddoor(200)
+    keymapper.goto(mapper.xcor(), mapper.ycor())
+    mapper.right(90)
+    makewall(275)
+    mapper.left(90)
+    makewall(275)
+    mapper.goto(0,0)
+    mapper.setheading(0)
+    key.goto(250,0)
+    key.showturtle()
+    
+screen = turtle.Screen() 
 screen.setup(800, 800)
 screen.title('Rendering')
 screen.tracer(False)
 
-# Making the map maker turtle
-mapper = Turtle()
-mapper.shape('square')
-mapper.hideturtle()
-mapper.penup()
-mapper.shapesize(stretch_wid=1/CURSOR_SIZE)
+room1()
 
-# make map
-mapper.goto(100, 0)
-mapper.right(90)
-mapper.forward(10)
-makewall(mapper, 80)
-mapper.right(90)
-makewall(mapper,80)
-mapper.forward(20)
-makewall(mapper,80)
-mapper.right(90)
-makewall(mapper,80)
-mapper.forward(20)
-makewall(mapper,80)
-mapper.right(90)
-makewall(mapper,80)
-mapper.forward(20)
-makewall(mapper,80)
-mapper.right(90)
-makewall(mapper,80)
-mapper.forward(20)
-
-winsound.PlaySound('assets\dunegonbg.wav', winsound.SND_ASYNC)
-
-# make the player 
-player = Turtle()
-player.color('blue')
-player.shapesize(0.5, 0.5, 0.5)
-player.penup()
-f = open('charicter.txt', 'r')
-a = int(f.read())
-player.shape(charicters[a])
-print(a)
-
-# movement 2
 screen.onkey(k1, 'w')
-screen.onkey(k2, 'a')
-screen.onkey(k3, 'd')
-screen.onkey(k4, 's')
+screen.onkey(k2, 'd')
+screen.onkey(k3, 'a')
 
-# no idea 
 screen.listen()
 screen.tracer(True)
-screen.title('Dungeon 1')
+screen.title('Floor 1')
 screen.mainloop()
