@@ -1,0 +1,4 @@
+floor = 1
+room = 1
+weapon = fist
+armourtype = leather
